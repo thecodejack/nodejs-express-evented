@@ -1,4 +1,5 @@
  var _ = require('lodash-node');
+ var users = require('./users');
 
 var events = [{
   id: 1,
@@ -76,7 +77,7 @@ ops.update= function(Obj) {
     });
     //delete Obj.id;
     out.event = Obj;
-    out.users = [];
+    out.users = updateUsersofEvents(Obj);
     return out;
 }
 
@@ -84,5 +85,31 @@ function generateId() {
     var Obj = events[events.length-1];
     return (Obj.id+1);
 }
+
+function updateUsersofEvents(Obj) {
+    var Obj = Obj, out = [];
+    _.forEach(users.findAll().users, function(user){
+        //console.log(user);
+        var jEvents = user.joinedLecs;
+        if(_.contains(jEvents, Obj.id)) {
+            if(!_.contains(Obj.joinedUsers, user.id)) {
+                var delId = user.id; 
+                user.joinedLecs = _.remove(jEvents, function(num) { return num == delId; });
+                users.update(user);
+                out.push(user);
+            }
+        } else {
+            if(_.contains(Obj.joinedUsers, user.id)) {
+                user.joinedLecs.push(user.id);
+                users.update(user);
+                out.push(user);
+            }
+        }
+    });
+    console.log(out);
+    return out;
+}
+
+//updateUsersofEvents({id:1, joinedUsers:[1,2]});
 
 module.exports = ops;
