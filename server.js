@@ -67,7 +67,11 @@ app.post('/events', function(req, res) {
 
 //update call
 app.put('/events/:id', function(req, res){
-    console.log(req.param('name'));
+    var id = req.param('id'),
+        eventObj = req.param('event');
+    eventObj.id = id;
+    var cEvent = event.update(eventObj);
+    res.send(cEvent);
 });
 
 app.delete('/events/:id', function(req, res) {

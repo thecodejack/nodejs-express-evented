@@ -68,11 +68,16 @@ ops.delete =  function(id) {
 }
 
 ops.update= function(Obj) {
+    var out = {};
     ops.delete(Obj.id);
     events.push(Obj);
     events = _.indexBy(events, function(Obj){
         return Number(Obj.id); 
     });
+    //delete Obj.id;
+    out.event = Obj;
+    out.users = [];
+    return out;
 }
 
 function generateId() {
