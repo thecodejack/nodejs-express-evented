@@ -17,7 +17,6 @@ app.get('/', function(req, res){
 //user REST calls
 app.get('/users', function(req, res){
   var ids = req.param('ids'), data;
-  console.log(ids);
   if(ids && ids.length) {
     data = user.findByIds(ids);
   } else {
@@ -69,7 +68,18 @@ app.post('/events', function(req, res) {
 app.put('/events/:id', function(req, res){
     var id = req.param('id'),
         eventObj = req.param('event');
-    eventObj.id = id;
+    eventObj.id = Number(id);
+    eventObj.creator = Number(eventObj.creator);
+    var x = (new Date(eventObj.createdDate)).toISOString();
+    eventObj.createdDate = x.substr(0,x.lastIndexOf('.')) + x.substr(x.length-1);
+    x = (new Date(eventObj.createdDate)).toISOString();
+    eventObj.scheduledDate = x.substr(0,x.lastIndexOf('.')) + x.substr(x.length-1);
+    console.log(eventObj.joinedUsers);
+    for(var i=0;i<eventObj.joinedUsers.length;i++) {
+        eventObj.joinedUsers[i] = Number(eventObj.joinedUsers[i]);
+        console.log(' ************* '+eventObj.joinedUsers[i]);
+    }
+    //console.log(eventObj);
     var cEvent = event.update(eventObj);
     res.send(cEvent);
 });

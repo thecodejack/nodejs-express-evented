@@ -72,9 +72,9 @@ ops.update= function(Obj) {
     var out = {};
     ops.delete(Obj.id);
     events.push(Obj);
-    events = _.indexBy(events, function(Obj){
+    /*events = _.indexBy(events, function(Obj){
         return Number(Obj.id); 
-    });
+    });*/
     //delete Obj.id;
     out.event = Obj;
     out.users = updateUsersofEvents(Obj);
@@ -89,6 +89,7 @@ function generateId() {
 function updateUsersofEvents(Obj) {
     var Obj = Obj, out = [];
     _.forEach(users.findAll().users, function(user){
+        //console.log('**********');
         //console.log(user);
         var jEvents = user.joinedLecs;
         if(_.contains(jEvents, Obj.id)) {
@@ -106,7 +107,7 @@ function updateUsersofEvents(Obj) {
             }
         }
     });
-    console.log(out);
+    //console.log(out);
     return out;
 }
 
